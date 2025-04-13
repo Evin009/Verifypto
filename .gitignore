@@ -134,4 +134,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
 config.py
+__pycache__/
+.env
+
