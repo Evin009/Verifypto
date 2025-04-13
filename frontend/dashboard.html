@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - Verifypto</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
   <style>
     body {
       margin: 0;
@@ -15,13 +20,15 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       text-align: center;
+      overflow-x: hidden;
+      position: relative;
     }
 
     h1 {
       color: #00e5ff;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     input[type="text"] {
@@ -44,30 +51,175 @@
       font-size: 1rem;
       cursor: pointer;
       box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+      margin-top: 10px;
     }
 
     button:hover {
       background-color: #00bcd4;
     }
+
+    .report {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      text-align: left;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,229,255,0.3);
+    }
+
+    .coin {
+      position: absolute;
+      top: -50px;
+      font-size: 1.2rem;
+      color: gold;
+      animation: fall linear infinite;
+      opacity: 0.8;
+      z-index: 0;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
-  <h1>Enter Your Wallet/Details</h1>
+  <h1>Verify Wallet Risk</h1>
   <input type="text" id="userInput" placeholder="Paste wallet address or details here..." />
   <br>
-  <button onclick="handleSubmit()">Submit</button>
+  <button onclick="handleVerify()">Submit</button>
+
+  <!-- <div id="reportContainer"></div>
+  <h2>📜 Your Verification History</h2>
+  <div id="historyContainer">Loading history...</div>
+  <button onclick="downloadPDF()">📥 Download PDF</button> -->
+
+  <!-- ✅ Use this instead -->
+<div id="pdfContent">
+  <h1 style="color:#00e5ff;">Verifypto Wallet Risk Report</h1>
+  <div id="reportContainer"></div>
+
+  <h2 style="color:#00e5ff; margin-top: 2rem;">📜 Your Verification History</h2>
+  <div id="historyContainer">Loading history...</div>
+</div>
+<button onclick="downloadPDF()">📥 Download PDF</button>
+
+
+  <!-- Falling Coins -->
+  <script>
+    for (let i = 0; i < 25; i++) {
+      const coin = document.createElement('span');
+      coin.classList.add('coin');
+      coin.innerHTML = '🪙';
+      coin.style.left = Math.random() * 100 + 'vw';
+      coin.style.animationDuration = 3 + Math.random() * 5 + 's';
+      coin.style.fontSize = 0.8 + Math.random() * 1.5 + 'rem';
+      coin.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(coin);
+    }
+  </script>
 
   <script>
-    function handleSubmit() {
-      const value = document.getElementById("userInput").value;
-      if (value.trim() === "") {
-        alert("Please enter a value before submitting.");
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    const uid = params.get("uid");
+
+    const BACKEND_URL = "https://8151-131-247-226-86.ngrok-free.app"; // ✅ Change if ngrok restarts
+
+    async function handleVerify() {
+      const wallet = document.getElementById("userInput").value.trim();
+      const container = document.getElementById("reportContainer");
+      container.innerHTML = "";
+
+      if (!wallet) {
+        alert("Please enter a wallet address");
         return;
       }
-      console.log("User input:", value);
-      alert("Submitted: " + value);
-      // You can process the input here (e.g., send to backend)
+
+      const url = `${BACKEND_URL}/verify?wallet=${encodeURIComponent(wallet)}&email=${encodeURIComponent(email)}&uid=${uid}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          container.innerHTML = `<p style="color:red;">❌ ${data.error}</p>`;
+        } else {
+          container.innerHTML = `
+            <div class="report">
+              <h3>✅ Wallet Report</h3>
+              <p><strong>Wallet:</strong> ${data.wallet}</p>
+              <p><strong>Verdict:</strong> ${data.verdict}</p>
+              <p><strong>Summary:</strong> ${data.summary}</p>
+              <p><strong>Risk Score:</strong> ${data.risk_score}</p>
+              <p><strong>Gemini Score:</strong> ${data.gemini_analysis?.score ?? 'N/A'}</p>
+              <h4>📊 Breakdown</h4>
+              <ul>${(data.score_breakdown || []).map(b => `<li>+${b.points} - ${b.reason}</li>`).join('')}</ul>
+              ${data.verdicts?.length ? `<h4>⚠️ Flags</h4><ul>${data.verdicts.map(v => `<li>${v}</li>`).join('')}</ul>` : ''}
+              <p><strong>Timestamp:</strong> ${data.timestamp}</p>
+            </div>
+          `;
+          loadUserHistory();
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">❌ Server error: ${err.message}</p>`;
+      }
     }
+
+    async function loadUserHistory() {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = "Loading...";
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/user-history?email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          container.innerHTML = `<p>No past verifications yet.</p>`;
+          return;
+        }
+
+        container.innerHTML = data.map(item => `
+          <div class="report">
+            <p><strong>Wallet:</strong> ${item.wallet}</p>
+            <p><strong>Verdict:</strong> ${item.verdict}</p>
+            <p><strong>Score:</strong> ${item.risk_score}</p>
+            <p><strong>Summary:</strong> ${item.summary}</p>
+            <p><strong>Time:</strong> ${new Date(item.timestamp).toLocaleString()}</p>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">❌ Error loading history: ${err.message}</p>`;
+      }
+    }
+
+
+    function downloadPDF() {
+    const element = document.getElementById("pdfContent");
+
+    const opt = {
+      margin:       0.5,
+      filename:     `Verifypto_Report_${new Date().toISOString().slice(0,10)}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  }
+    // function downloadPDF() {
+    //   alert("📝 PDF feature coming soon!");
+    // }
+
+    // Load history on page load
+    window.onload = () => {
+      if (email && uid) {
+        loadUserHistory();
+      } else {
+        document.getElementById("historyContainer").innerHTML = "Login info missing in URL.";
+      }
+    };
   </script>
 </body>
 </html>
