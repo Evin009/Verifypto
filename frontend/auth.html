@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Verifypto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1629383946439-3d96cc7c97a7?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      text-align: center;
+    }
+
+    /* Overlay to improve text readability */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 0;
+    }
+
+    h1, p, button {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #00e5ff;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background-color: #00e5ff;
+      border: none;
+      color: black;
+      padding: 14px 32px;
+      font-size: 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+      z-index: 1;
+    }
+
+    button:hover {
+      background-color: #00bcd4;
+    }
+
+    .container {
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Login to Verifypto</h1>
+    <p>Sign in with your Google account to continue</p>
+    <button id="google-login"><i class="fab fa-google"></i> Sign in with Google</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAmvcpqdSMadmuL_1FxAFCgcMFuQ4eD1cQ",
+      authDomain: "verifyptofirst.firebaseapp.com",
+      projectId: "verifyptofirst",
+      storageBucket: "verifyptofirst.appspot.com",
+      messagingSenderId: "511266246145",
+      appId: "1:511266246145:web:a866d3130b695589a4ba00",
+      measurementId: "G-PSB1JQYM9K"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById("google-login").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          alert(`Welcome ${user.displayName}`);
+          window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          console.error("Sign-in error:", error);
+          alert("Sign-in failed");
+        });
+    });
+  </script>
+</body>
+</html>
