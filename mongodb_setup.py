@@ -1,27 +1,18 @@
 from pymongo import MongoClient
+from datetime import datetime
 
-# Replace <username>, <password>, and <dbname> with your MongoDB Atlas credentials
 CONNECTION_STRING = "mongodb+srv://TheLegoMax:3SIrQKvUtK08kPtx@crypto-cluster.0umlksj.mongodb.net/?retryWrites=true&w=majority&appName=Crypto-Cluster"
-# Connect to MongoDB Atlas
+
 client = MongoClient(CONNECTION_STRING)
-
-# Create or access a database
 db = client['crypto_verification']
+collection = db['verifications']
 
-# Create or access a collection
-collection = db['transactions']
+def save_verification(report):
+    report["timestamp"] = datetime.utcnow()
+    return collection.insert_one(report)
 
-# Insert sample data
-sample_data = {
-    "transaction_id": "tx12345",
-    "wallet_address": "0xABC123DEF456",
-    "amount": 0.5,
-    "currency": "BTC",
-    "timestamp": "2025-04-13T12:00:00Z",
-    "status": "pending"
-}
-collection.insert_one(sample_data)
+def get_all_verifications():
+    return list(collection.find())
 
-# Retrieve and print all documents in the collection
-for transaction in collection.find():
-    print(transaction)
+def get_by_wallet(wallet_address):
+    return list(collection.find({"wallet": wallet_address}))
