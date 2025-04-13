@@ -1,17 +1,23 @@
-# gemini_helper.py
-
 import google.generativeai as genai
 from config import GEMINI_API_KEY
 
-# Configure the API
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Initialize the model
-model = genai.GenerativeModel('gemini-pro')
+def analyze_with_gemini(data):
+    model = genai.GenerativeModel("gemini-pro")
 
-def generate_summary(input_text):
-    try:
-        response = model.generate_content(input_text)
-        return response.text
-    except Exception as e:
-        return f"Error: {e}"
+    prompt = f"""
+You are a blockchain security analyst AI.
+
+Analyze the following Etherscan-derived data and return:
+1. "verdict" (Safe / Medium Risk / Likely Scam)
+2. "score" (0-10, higher = riskier)
+3. "summary" (brief human-readable summary)
+
+Data:
+{data}
+"""
+
+    response = model.generate_content(prompt)
+    return response.text
+
