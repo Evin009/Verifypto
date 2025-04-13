@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Verifypto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #000000, #111111);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      color: #00e5ff;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      padding: 14px 20px;
+      border-radius: 30px;
+      border: none;
+      width: 300px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    button {
+      background-color: #00e5ff;
+      color: black;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+    }
+
+    button:hover {
+      background-color: #00bcd4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Enter Your Wallet/Details</h1>
+  <input type="text" id="userInput" placeholder="Paste wallet address or details here..." />
+  <br>
+  <button onclick="handleSubmit()">Submit</button>
+
+  <script>
+    function handleSubmit() {
+      const value = document.getElementById("userInput").value;
+      if (value.trim() === "") {
+        alert("Please enter a value before submitting.");
+        return;
+      }
+      console.log("User input:", value);
+      alert("Submitted: " + value);
+      // You can process the input here (e.g., send to backend)
+    }
+  </script>
+</body>
+</html>
