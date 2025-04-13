@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verifypto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url('https://images.unsplash.com/photo-1629383946439-3d96cc7c97a7?auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+    }
+
+    h1 {
+      font-size: 8rem;
+      color: #00e5ff;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px #000;
+    }
+
+    p {
+      color: #eee;
+      margin-bottom: 50px;
+      font-size: 1.2rem;
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    button {
+      background: #161715;
+      border: none;
+      color: rgb(15, 113, 59);
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #00d404;
+    }
+  </style>
+</head>
+<body>
+  <h1>Verifypto</h1>
+  <p>Secure your crypto journey with trust verification</p>
+  <button onclick="window.location.href='auth.html'">
+    <i class="fab fa-google"></i> Start Verifying
+  </button>
+</body>
+</html>
