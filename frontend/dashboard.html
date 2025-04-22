@@ -1,124 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Verifypto</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Verifypto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
   <style>
-    :root {
-      --primary: #00e5ff;
-      --secondary: #00e676;
-      --dark: #0a0a0a;
-      --light: #f0f0f0;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
-        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover;
+      background: linear-gradient(to right, #000000, #111111);
+      color: #fff;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
-      position: relative;
-      color: white;
-    }
-
-    .bg-element {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.15;
-      z-index: 0;
-    }
-
-    .element-1 {
-      width: 300px;
-      height: 300px;
-      background: var(--primary);
-      top: -100px;
-      left: -100px;
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .element-2 {
-      width: 400px;
-      height: 400px;
-      background: var(--secondary);
-      bottom: -150px;
-      right: -100px;
-      animation: float 10s ease-in-out infinite 2s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(30px, 40px); }
-    }
-
-    .login-box {
-      position: relative;
-      background: rgba(15, 15, 15, 0.7);
-      border-radius: 20px;
-      padding: 50px 40px;
-      max-width: 400px;
-      width: 90%;
+      min-height: 100vh;
       text-align: center;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      z-index: 1;
+      overflow-x: hidden;
+      position: relative;
     }
 
     h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
+      color: #00e5ff;
       margin-bottom: 20px;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
     }
 
-    p {
+    input[type="text"] {
+      padding: 14px 20px;
+      border-radius: 30px;
+      border: none;
+      width: 300px;
       font-size: 1rem;
-      color: #ddd;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     button {
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      color: var(--dark);
-      padding: 14px 32px;
-      font-size: 1rem;
-      font-weight: 600;
+      background-color: #00e5ff;
+      color: black;
+      padding: 12px 28px;
       border: none;
       border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0, 229, 255, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+      margin-top: 10px;
     }
 
     button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(0, 255, 100, 0.4);
+      background-color: #00bcd4;
     }
 
-    button i {
-      margin-right: 10px;
+    .report {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      text-align: left;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,229,255,0.3);
     }
 
-    /* Falling Coins Animation */
     .coin {
       position: absolute;
       top: -50px;
@@ -130,63 +76,43 @@
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-100px) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    
+    /* Add loading state indicator */
+    .loading {
+      display: inline-block;
+      margin: 1rem;
+      color: #00e5ff;
+    }
+    
+    /* Add error message styling */
+    .error-message {
+      color: #ff3333;
+      background-color: rgba(255, 51, 51, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
     }
   </style>
 </head>
 <body>
-  <div class="bg-element element-1"></div>
-  <div class="bg-element element-2"></div>
+  <h1>Verify Wallet Risk</h1>
+  <input type="text" id="userInput" placeholder="Paste wallet address or details here..." />
+  <br>
+  <button onclick="handleVerify()">Submit</button>
 
-  <div class="login-box">
-    <h1>Login to Verifypto</h1>
-    <p>Sign in with your Google account to continue</p>
-    <button id="google-login"><i class="fab fa-google"></i> Sign in with Google</button>
+  <div id="pdfContent">
+    <h1 style="color:#00e5ff;">Verifypto Wallet Risk Report</h1>
+    <div id="reportContainer"></div>
+
+    <h2 style="color:#00e5ff; margin-top: 2rem;">📜 Your Verification History</h2>
+    <div id="historyContainer">Loading history...</div>
   </div>
+  <button onclick="downloadPDF()">📥 Download PDF</button>
 
-  <!-- Firebase Auth -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAmvcpqdSMadmuL_1FxAFCgcMFuQ4eD1cQ",
-      authDomain: "verifyptofirst.firebaseapp.com",
-      projectId: "verifyptofirst",
-      storageBucket: "verifyptofirst.appspot.com",
-      messagingSenderId: "511266246145",
-      appId: "1:511266246145:web:a866d3130b695589a4ba00",
-      measurementId: "G-PSB1JQYM9K"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    document.getElementById("google-login").addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          alert(`Welcome ${user.displayName}`);
-          window.location.href = `/dashboard?email=${encodeURIComponent(user.email)}&uid=${user.uid}`;
-        })
-        .catch((error) => {
-          console.error("Sign-in error:", error);
-          alert("Sign-in failed");
-        });
-    });
-  </script>
-
-  <!-- Falling Coins Script -->
+  <!-- Falling Coins -->
   <script>
     for (let i = 0; i < 25; i++) {
       const coin = document.createElement('span');
@@ -198,6 +124,143 @@
       coin.style.animationDelay = Math.random() * 5 + 's';
       document.body.appendChild(coin);
     }
+  </script>
+
+  <script>
+    // Get URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    const uid = params.get("uid");
+
+    // Update this with your current ngrok URL
+    const BACKEND_URL = "https://f6ac-47-200-20-106.ngrok-free.app"; 
+    
+    // Show a loading indicator
+    function showLoading(elementId) {
+      document.getElementById(elementId).innerHTML = '<div class="loading">Loading...</div>';
+    }
+    
+    // Show an error message
+    function showError(elementId, message) {
+      document.getElementById(elementId).innerHTML = `<div class="error-message">❌ ${message}</div>`;
+    }
+
+    async function handleVerify() {
+      const wallet = document.getElementById("userInput").value.trim();
+      const container = document.getElementById("reportContainer");
+      
+      if (!wallet) {
+        showError("reportContainer", "Please enter a wallet address");
+        return;
+      }
+
+      showLoading("reportContainer");
+      
+      // Build URL with all parameters
+      let url = `${BACKEND_URL}/verify?wallet=${encodeURIComponent(wallet)}`;
+      
+      // Add optional parameters if available
+      if (email) url += `&email=${encodeURIComponent(email)}`;
+      if (uid) url += `&uid=${encodeURIComponent(uid)}`;
+
+      try {
+        console.log("Fetching from URL:", url);
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        if (data.error) {
+          showError("reportContainer", data.error);
+        } else {
+          container.innerHTML = `
+            <div class="report">
+              <h3>✅ Wallet Report</h3>
+              <p><strong>Wallet:</strong> ${data.wallet}</p>
+              <p><strong>Verdict:</strong> ${data.verdict}</p>
+              <p><strong>Summary:</strong> ${data.summary}</p>
+              <p><strong>Risk Score:</strong> ${data.risk_score}</p>
+              <p><strong>Gemini Score:</strong> ${data.gemini_analysis?.score ?? 'N/A'}</p>
+              <h4>📊 Breakdown</h4>
+              <ul>${(data.score_breakdown || []).map(b => `<li>+${b.points} - ${b.reason}</li>`).join('')}</ul>
+              ${data.verdicts?.length ? `<h4>⚠️ Flags</h4><ul>${data.verdicts.map(v => `<li>${v}</li>`).join('')}</ul>` : ''}
+              <p><strong>Timestamp:</strong> ${data.timestamp}</p>
+            </div>
+          `;
+          loadUserHistory();
+        }
+      } catch (err) {
+        console.error("Error during verification:", err);
+        showError("reportContainer", `Server error: ${err.message}`);
+      }
+    }
+
+    async function loadUserHistory() {
+      const container = document.getElementById("historyContainer");
+      
+      if (!email) {
+        container.innerHTML = `<p>Login required to view history.</p>`;
+        return;
+      }
+      
+      showLoading("historyContainer");
+
+      try {
+        console.log("Fetching history for email:", email);
+        const response = await fetch(`${BACKEND_URL}/user-history?email=${encodeURIComponent(email)}`);
+        
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          container.innerHTML = `<p>No past verifications yet.</p>`;
+          return;
+        }
+
+        container.innerHTML = data.map(item => `
+          <div class="report">
+            <p><strong>Wallet:</strong> ${item.wallet}</p>
+            <p><strong>Verdict:</strong> ${item.verdict}</p>
+            <p><strong>Score:</strong> ${item.risk_score}</p>
+            <p><strong>Summary:</strong> ${item.summary}</p>
+            <p><strong>Time:</strong> ${new Date(item.timestamp).toLocaleString()}</p>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error("Error loading history:", err);
+        showError("historyContainer", `Error loading history: ${err.message}`);
+      }
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById("pdfContent");
+
+      const opt = {
+        margin: 0.5,
+        filename: `Verifypto_Report_${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // Load history on page load
+    window.onload = () => {
+      if (email) {
+        console.log("Found email in URL, loading history");
+        loadUserHistory();
+      } else {
+        document.getElementById("historyContainer").innerHTML = "<p>Login required to view history.</p>";
+      }
+    };
   </script>
 </body>
 </html>
