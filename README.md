@@ -1,4 +1,4 @@
-# Crypto
+# Verifypto
 
 # Inspiration sample
 With the rise of cryptocurrency adoption, scams and shady crypto projects have become a growing concern, especially for beginners. We wanted to build something that could act as a trustworthy watchdog for the blockchain, helping users detect potentially risky or fraudulent crypto wallets and contracts in real time. Our goal was to create a tool that promotes transparency, awareness, and safety in the crypto world.
